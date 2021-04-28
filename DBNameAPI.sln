@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30704.19
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{A99171F4-43ED-48FC-978B-9193EDE4E466}") = "DBNameAPI", "DBNameAPI.vrproj", "{08276C97-0897-49CD-86AE-28645A809844}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08276C97-0897-49CD-86AE-28645A809844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08276C97-0897-49CD-86AE-28645A809844}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08276C97-0897-49CD-86AE-28645A809844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08276C97-0897-49CD-86AE-28645A809844}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2FD49E47-021D-4E6E-BA1F-2E82E183A64D}
+	EndGlobalSection
+EndGlobal

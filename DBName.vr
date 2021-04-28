@@ -1,0 +1,115 @@
+﻿Using System.Security
+Using System.Collections.Generic
+
+BegClass ASNADBName Access(*Public) 
+    DclProp SourceProfile Type(ASNA.DataGate.Providers.SourceProfile) Access(*Public) 
+
+    BegConstructor Access(*Public) 
+        *This.SourceProfile = *New ASNA.DataGate.Providers.SourceProfile()
+    EndConstructor 
+
+    BegSr ResetSourceProfile Access(*Public) 
+        *This.SourceProfile = *New ASNA.DataGate.Providers.SourceProfile()        
+    EndSr
+
+    BegFunc CreateCredentials Access(*Private) Type(ASNA.DataGate.Providers.UserPasswordCredential)
+        DclSrParm User Type(*String) 
+        DclSrParm Password Type(*String) 
+        DclSrParm PasswordType Type(ASNA.DataGate.Common.PasswordType)
+
+        DclFld Credentials Type(ASNA.DataGate.Providers.UserPasswordCredential) New()
+        DclFld passwd Type(SecureString) New()
+        DclFld c Type(*OneChar) 
+        DclFld i Type(*Integer4) 
+
+        Credentials.User = User 
+
+        For Index(i = 0) To(Password.Length - 1) 
+            c = Password.Substring(i, 1).ToCharArray()[0]
+            passwd.AppendChar(c) 
+        EndFor 
+
+        Credentials.Password = passwd
+        Credentials.PasswordType = PasswordType
+        LeaveSr Credentials
+    EndFunc 
+
+    BegSr AssignCustomSourceProfileDefaults Access(*Public)
+        // Reset profile to as-delivered defaults. 
+        *This.SourceProfile = *New ASNA.DataGate.Providers.SourceProfile()        
+
+        // Apply custom defaults. 
+        // Port intrinsically defaults to 5042.
+        *This.SourceProfile.Label = 'DB2'        
+        *This.SourceProfile.PlatformAttribute = '*DATALINK' //  '*SQLOLEDB' for DSS or '*DATALINK' for IBM i or local DB. 
+        *This.SourceProfile.PoolingTimeout = 20 // Expressed in minutes.
+
+        // Four popular SSL options compbinations are:
+
+        // Only connect using SSL; any cryptographically-valid server certificate is accepted, without further validation.
+        //*This.SourceProfile.SslOptions = ASNA.DataGate.Common.SslOptions.Require
+
+        // Connect using SSL if possible, otherwise use a non-SSL connection; any cryptographically-valid server certificate is accepted, without further validation.
+        *This.SourceProfile.SslOptions = ASNA.DataGate.Common.SslOptions.Request
+
+        // Only connect using SSL, and only if the server is configured to accept only SSL connections; any cryptographically-valid server certificate is accepted, without further validation.
+        // *This.SourceProfile.SslOptions = ASNA.DataGate.Common.SslOptions.Require *BitOr ASNA.DataGate.Common.SslOptions.NoClearText
+
+        // Connect using SSL if possible, otherwise use a non-SSL connection; server certificate's subject name must be the domain host name of the server.
+        // *This.SourceProfile.SslOptions = ASNA.DataGate.Common.SslOptions.Require *BitOr ASNA.DataGate.Common.SslOptions.AuthDns
+
+        *This.SourceProfile.SslCertificateName = '*ANY' 
+    EndSr
+
+    BegSr Delete Access(*Public) 
+        DclSrParm DBName Type(*String) 
+        Try
+            ASNA.DataGate.Providers.DatabaseName.UnRegister(DBName) 
+        Finally
+        EndTry 
+    EndSr 
+
+    BegSr CreatePublic Access(*Public) 
+        DclSrParm DBName Type(*String) 
+        DclSrParm User Type(*String) 
+        DclSrParm Password Type(*String) 
+
+        *This.Create(DBName, User, Password, *True) 
+    EndSr
+
+    BegSr CreatePrivate Access(*Public) 
+        DclSrParm DBName Type(*String) 
+        DclSrParm User Type(*String) 
+        DclSrParm Password Type(*String) 
+
+        *This.Create(DBName, User, Password, *False) 
+    EndSr
+
+    BegSr Create Access(*Private)
+        DclSrParm DBName Type(*String) 
+        DclSrParm User Type(*String) 
+        DclSrParm Password Type(*String) 
+        DclSrParm IsPublic Type(*Boolean) 
+
+        DclFld sp Type(ASNA.DataGate.Providers.SourceProfile)
+
+        sp = *This.SourceProfile
+
+        Try
+            ASNA.DataGate.Providers.DatabaseName.UnRegister(DBName) 
+        Finally
+        EndTry 
+
+        If IsPublic
+            DBName = '*Public/' + DBName
+        EndIf 
+
+        sp.Credential = CreateCredentials(User, Password, ASNA.DataGate.Common.PasswordType.SecurePassphrase) 
+
+        // For local databases use Legacy password type.        
+        // sp.Credential = CreateCredentials(User, Password, ASNA.DataGate.Common.PasswordType.Legacy) 
+
+        ASNA.DataGate.Providers.DatabaseName.Register(sp, DBName) 
+    EndSr 
+
+EndClass
