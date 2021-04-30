@@ -1,4 +1,4 @@
-## Create or modify an ASNA Database Name. 
+## Create, modify or delete an ASNA Database Name 
 
 > Important: This code applies only to DataGate 16.x clients. 
 
@@ -54,7 +54,7 @@ Delete a database name.
 
 ---
 
-##### ChangeCredentialse((`DBNAME`, `USER`, `PASSWORD`)
+##### ChangeCredentials((`DBNAME`, `USER`, `PASSWORD`)
 
 Change the credentials for a database name.
 
