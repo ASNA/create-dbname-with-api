@@ -12,6 +12,42 @@ BegClass ASNADBName Access(*Public)
         *This.SourceProfile = *New ASNA.DataGate.Providers.SourceProfile()        
     EndSr
 
+    BegFunc GetPublicDBNames Type(*String) Rank(1) 
+        DclArray Result Type(*String) Rank(1) 
+
+        Result = ASNA.DataGate.Providers.DatabaseName.GetNames(*True) 
+        
+        LeaveSr Result
+    EndFunc 
+
+    BegSr ChangeCredentials Access(*Public)
+        DclSrParm DBName Type(*String) 
+        DclSrParm User Type(*String) 
+        DclSrParm Password Type(*String) 
+
+        DclFld sp Type(ASNA.DataGate.Providers.SourceProfile) 
+
+        DclArray PublicDBNames Type(*String) Rank(1) 
+        DclFld IsPublic Type(*Boolean) 
+
+        PublicDBNames = ASNA.DataGate.Providers.DatabaseName.GetNames(*True) 
+        IsPublic = System.Array.IndexOf(PublicDBNames, DBName) > -1
+
+        sp = *New ASNA.DataGate.Providers.SourceProfile(DBName)        
+        sp.Credential = CreateCredentials(User, Password, ASNA.DataGate.Common.PasswordType.SecurePassphrase) 
+
+        If IsPublic
+            DBName = '*Public/' + DBName
+        EndIf 
+
+        Try
+            ASNA.DataGate.Providers.DatabaseName.UnRegister(DBName) 
+        Finally
+        EndTry 
+
+        ASNA.DataGate.Providers.DatabaseName.Register(sp, DBName) 
+    EndSr
+
     BegFunc CreateCredentials Access(*Private) Type(ASNA.DataGate.Providers.UserPasswordCredential)
         DclSrParm User Type(*String) 
         DclSrParm Password Type(*String) 

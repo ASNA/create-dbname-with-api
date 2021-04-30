@@ -1,8 +1,10 @@
 ## Create or modify an ASNA Database Name. 
 
-> Important. This code applies only to DataGate 16.x clients. 
+> Important: This code applies only to DataGate 16.x clients. 
 
-The `ASNADBName` class provides five public methods that you can use to maintain database names programatically with AVR. Add the `ASNADBName` class to your project (or package it in a DLL and reference that DLL in your project) and use the example code below. 
+> Important: Any binary created using the `ASNADBName` class must be run with Windows adminstrative rights.
+
+The `ASNADBName` class provides six public methods that you can use to maintain database names programatically with AVR. Add the `ASNADBName` class to your project (or package it in a DLL and reference that DLL in your project) and use the example code below. 
 
 Defaults are set in the `AssignCustomSourceProfileDefaults` method.
 
@@ -52,8 +54,13 @@ Delete a database name.
 
 ---
 
+##### ChangeCredentialse((`DBNAME`, `USER`, `PASSWORD`)
 
-To create a database name: 
+Change the credentials for a database name.
+
+---
+
+Code examples:
 
     DclFld DBName Type(ASNADBName) New()
 
@@ -85,3 +92,9 @@ To create a database name:
 
     // Create a private name.
     DBName.CreatePrivate('rpDelete6', 'username', 'password')
+
+    // Change user name and password credentials. 
+    // Change database named `rpdelete6` credentials
+    // to `Neil` and `J*bzNgXlZqV24`
+    // The public/private status of the DB name is persisted.
+    DBName.ChangeCredentials('rpdelete6', 'Neil', 'J*bzNgXlZqV24')

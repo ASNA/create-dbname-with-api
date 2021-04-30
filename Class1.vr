@@ -12,6 +12,13 @@ BegClass Program
 
 		DclFld DBName Type(ASNADBName) New()
 
+		DBName.ChangeCredentials('rpdelete6', 'xxxxx', 'yyyy') 
+        Console.WriteLine('Password changed... Press any key to continue...') 
+        Console.ReadKey()
+
+		LeaveSr
+
+
 		DBName.AssignCustomSourceProfileDefaults()
 		
 		// Assign server and port. Port defaults to 5042.
